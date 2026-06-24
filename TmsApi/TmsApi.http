@@ -1,0 +1,6 @@
+@TmsApi_HostAddress = http://localhost:5280
+
+GET {{TmsApi_HostAddress}}/api/enrollments/
+Accept: application/json
+
+###
