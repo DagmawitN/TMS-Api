@@ -8,7 +8,7 @@ namespace TmsApi.Controllers;
 [Route("api/reports")]
 public class ReportsController(TmsDbContext context) : ControllerBase
 {
-    [HttpGet("active-students-count")]
+[HttpGet("active-students-count")]
 public async Task<IActionResult> ActiveStudentsCount()
 {
     var count = await context.Students
@@ -58,4 +58,37 @@ public async Task<IActionResult> StudentsWithoutEnrollments()
 
     return Ok(list);
 }
+
+[HttpGet("top-courses")]
+public async Task<IActionResult> GetTopCourses()
+{
+    var courses = await context.Courses
+        .Select(c => new
+        {
+            c.Title,
+            EnrollmentCount = c.Enrollments.Count
+        })
+        .OrderByDescending(c => c.EnrollmentCount)
+        .Take(5)
+        .ToListAsync();
+
+    return Ok(courses);
+}
+
+[HttpPost("archive")]
+public async Task<IActionResult> ArchiveOldEnrollments()
+{
+    var cutoffDate = DateTime.UtcNow.AddYears(-1);
+
+    var affectedRows = await context.Enrollments
+        .Where(e => e.EnrolledAt < cutoffDate)
+        .ExecuteUpdateAsync(s => s
+            .SetProperty(e => e.IsArchived, true));
+
+    return Ok(new
+    {
+        Archived = affectedRows
+    });
+}
+
 }

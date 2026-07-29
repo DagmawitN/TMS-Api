@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using TmsApi.Data;
@@ -39,6 +40,44 @@ catch (Exception ex)
 Console.WriteLine($">>> EXCEPTION CAUGHT: {ex.Message}\n");
 return BadRequest(new { Message = ex.Message });
 }
+}
+
+[HttpGet("nplusone")]
+public async Task<IActionResult> NPlusOne()
+{
+    var students = await context.Students
+        .AsNoTracking()
+        .ToListAsync();
+
+    foreach (var s in students)
+    {
+        var count = await context.Enrollments
+            .AsNoTracking()
+            .CountAsync(e => e.StudentId == s.Id);
+
+        Console.WriteLine($"{s.Name}: {count} enrollments");
+    }
+
+    return Ok("Check the console logs.");
+}
+[HttpGet("shaped-query")]
+public async Task<IActionResult> ShapedQuery()
+{
+    var report = await context.Students
+        .AsNoTracking()
+        .Select(s => new
+        {
+            s.Name,
+            EnrollmentCount = s.Enrollments.Count
+        })
+        .ToListAsync();
+
+    foreach (var r in report)
+    {
+        Console.WriteLine($"{r.Name}: {r.EnrollmentCount} enrollments");
+    }
+
+    return Ok(report);
 }
 
 }

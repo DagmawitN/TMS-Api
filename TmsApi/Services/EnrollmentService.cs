@@ -1,15 +1,16 @@
 public interface IEnrollmentService
 {
     Task<EnrollmentModels> EnrollAsync(int studentId, string courseCode);
-    Task<EnrollmentModels?> GetByIdAsync(string id);
+    Task<EnrollmentModels?> GetByIdAsync(int id);
     Task<IReadOnlyList<EnrollmentModels>> GetAllAsync();
-    Task<bool> DeleteAsync(string id);
+    Task<bool> DeleteAsync(int id);
 }
 
 public class EnrollmentService : IEnrollmentService
 {
-    private readonly Dictionary<string, EnrollmentModels> _store = new();
+    private readonly Dictionary<int, EnrollmentModels> _store = new();
     private readonly ILogger<EnrollmentService> _logger;
+    private int _nextId = 1;
 
     public EnrollmentService(ILogger<EnrollmentService> logger)
     {
@@ -18,7 +19,7 @@ public class EnrollmentService : IEnrollmentService
 
     public Task<EnrollmentModels> EnrollAsync(int studentId, string courseCode)
     {
-        var id = Guid.NewGuid().ToString("N")[..8];
+        var id = _nextId++;
 
         var enrollment = new EnrollmentModels
         {
@@ -39,7 +40,7 @@ public class EnrollmentService : IEnrollmentService
         return Task.FromResult(enrollment);
     }
 
-    public Task<EnrollmentModels?> GetByIdAsync(string id)
+    public Task<EnrollmentModels?> GetByIdAsync(int id)
     {
         _store.TryGetValue(id, out var enrollment);
         return Task.FromResult(enrollment);
@@ -51,7 +52,7 @@ public class EnrollmentService : IEnrollmentService
         return Task.FromResult(all);
     }
 
-    public Task<bool> DeleteAsync(string id)
+    public Task<bool> DeleteAsync(int id)
     {
         var removed = _store.Remove(id);
         return Task.FromResult(removed);
