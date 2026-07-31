@@ -29,7 +29,7 @@ public async Task<IActionResult> CoursesByEnrollment()
             c.Title,
             EnrollmentCount = c.Enrollments.Count
         })
-        .OrderByDescending(x => x.EnrollmentCount)
+        //.OrderByDescending(x => x.EnrollmentCount)
         .ToListAsync();
 
     return Ok(list);

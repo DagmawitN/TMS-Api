@@ -18,12 +18,12 @@ public class CourseConfiguration : IEntityTypeConfiguration<Course>
         .IsRequired()
         .HasMaxLength(100);
 
-    builder.Property(c => c.Capacity)
+    builder.Property(c => c.MaxCapacity)
         .HasMaxLength(100);
 
-    builder.HasMany(c => c.Enrollments)
-        .WithOne(e => e.Course)
-        .HasForeignKey(e => e.CourseId)
-        .OnDelete(DeleteBehavior.Restrict);
+    // builder.HasMany(c => c.Enrollments)
+    //     .WithOne(e => e.Course)
+    //     .HasForeignKey(e => e.CourseId)
+    //     .OnDelete(DeleteBehavior.Restrict);
 }
 }

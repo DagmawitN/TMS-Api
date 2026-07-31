@@ -12,7 +12,7 @@ public class EnrollmentConfiguration : IEntityTypeConfiguration<Enrollment>
     b.HasIndex(e => new { e.StudentId, e.CourseId }).IsUnique();
     b.HasOne(e => e.Student).WithMany(s => s.Enrollments)
     .HasForeignKey(e => e.StudentId).OnDelete(DeleteBehavior.Restrict);;
-    b.HasOne(e => e.Course).WithMany(c => c.Enrollments)
-    .HasForeignKey(e => e.CourseId).OnDelete(DeleteBehavior.Restrict);
+    // b.HasOne(e => e.Course).WithMany(c => c.Enrollments)
+    // .HasForeignKey(e => e.CourseId).OnDelete(DeleteBehavior.Restrict);
 }
 }

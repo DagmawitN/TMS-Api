@@ -1,62 +1,34 @@
-public interface IEnrollmentService
+using Microsoft.EntityFrameworkCore;
+using TmsApi.Data;
+using TmsApi.Entities;
+using Tms.Api.Dtos;
+using TmsApi.Services;
+public class EnrollmentService(TmsDbContext context, ILogger<EnrollmentService> logger) : IEnrollmentService
 {
-    Task<EnrollmentModels> EnrollAsync(int studentId, string courseCode);
-    Task<EnrollmentModels?> GetByIdAsync(int id);
-    Task<IReadOnlyList<EnrollmentModels>> GetAllAsync();
-    Task<bool> DeleteAsync(int id);
-}
-
-public class EnrollmentService : IEnrollmentService
+public Task<EnrollmentResponseDto?> GetByIdAsync(int courseId, int id, CancellationToken ct) => context.Enrollments
+.AsNoTracking()
+.Where(e => e.Id == id && e.CourseId == courseId)
+.Select(e => new EnrollmentResponseDto(e.Id, e.CourseId, e.
+StudentId, e.EnrolledAt))
+.FirstOrDefaultAsync(ct);
+public async Task<EnrollmentResponseDto> CreateAsync(int courseId, EnrollStudentRequest request, CancellationToken ct)
 {
-    private readonly Dictionary<int, EnrollmentModels> _store = new();
-    private readonly ILogger<EnrollmentService> _logger;
-    private int _nextId = 1;
+var enrollment = new Enrollment
+{
+CourseId = courseId,
+StudentId = request.StudentId,
+EnrolledAt = DateTime.UtcNow
+};
 
-    public EnrollmentService(ILogger<EnrollmentService> logger)
-    {
-        _logger = logger;
-    }
+context.Enrollments.Add(enrollment);
+await context.SaveChangesAsync(ct);
 
-    public Task<EnrollmentModels> EnrollAsync(int studentId, string courseCode)
-    {
-        var id = _nextId++;
+logger.LogInformation(
+    "Created enrollment {EnrollmentId} for student {StudentId} in course {CourseId}",
+    enrollment.Id,
+    enrollment.StudentId,
+    enrollment.CourseId);
 
-        var enrollment = new EnrollmentModels
-        {
-            Id = id,
-            StudentId = studentId,
-            CourseId = int.Parse(courseCode),
-            ProcessedAt = DateTime.UtcNow
-        };
-
-        _store[id] = enrollment;
-
-        _logger.LogInformation(
-            "Enrolled {StudentId} in {CourseId} record {EnrollmentId}",
-            studentId,
-            courseCode,
-            id);
-
-        return Task.FromResult(enrollment);
-    }
-
-    public Task<EnrollmentModels?> GetByIdAsync(int id)
-    {
-        _store.TryGetValue(id, out var enrollment);
-        return Task.FromResult(enrollment);
-    }
-
-    public Task<IReadOnlyList<EnrollmentModels>> GetAllAsync()
-    {
-        IReadOnlyList<EnrollmentModels> all = _store.Values.ToList();
-        return Task.FromResult(all);
-    }
-
-    public Task<bool> DeleteAsync(int id)
-    {
-        var removed = _store.Remove(id);
-        return Task.FromResult(removed);
-    }
+return (await GetByIdAsync(courseId, enrollment.Id, ct))!;
 }
-public class TmsDatabaseException(string message) : Exception(message);
-
+}
