@@ -5,6 +5,12 @@ using Tms.Api.Dtos;
 using TmsApi.Services;
 public class EnrollmentService(TmsDbContext context, ILogger<EnrollmentService> logger) : IEnrollmentService
 {
+public async Task<List<EnrollmentResponseDto>> GetByCourseAsync(int courseId, CancellationToken ct) => await context.Enrollments
+.AsNoTracking()
+.Where(e => e.CourseId == courseId)
+.Select(e => new EnrollmentResponseDto(e.Id, e.CourseId, e.StudentId, e.EnrolledAt))
+.ToListAsync(ct);
+
 public Task<EnrollmentResponseDto?> GetByIdAsync(int courseId, int id, CancellationToken ct) => context.Enrollments
 .AsNoTracking()
 .Where(e => e.Id == id && e.CourseId == courseId)

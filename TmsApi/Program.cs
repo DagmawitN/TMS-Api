@@ -1,7 +1,7 @@
 using Scalar.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using TmsApi.Data;
-using TmsApi.Entities;
+using Tms.Api.Filters;
 
 using TmsApi.Services;
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +14,10 @@ builder.Services.AddProblemDetails();
 builder.Services.AddDbContext<TmsDbContext>(options =>options.UseNpgsql(builder.Configuration.GetConnectionString("TmsDatabase")).LogTo(Console.WriteLine, LogLevel.Information).EnableSensitiveDataLogging()); // Show parameters in querylogs (dev only)
 builder.Services.AddControllers();
 
+builder.Services.AddControllers(options =>
+{
+options.Filters.Add<AuditLogFilter>();
+});
 builder.Services.AddScoped <ICourseService, CourseService>();
 builder.Services.AddScoped <IEnrollmentService, EnrollmentService>();
 
@@ -79,6 +83,13 @@ if(app.Environment.IsDevelopment())
 // context.SaveChanges();
 // }
 // }
+
+if (app.Environment.IsDevelopment())
+{
+using var scope = app.Services.CreateScope();
+var context = scope.ServiceProvider.GetRequiredService<TmsDbContext>();
+await DataSeeder.SeedAsync(context);
+}
 
 app.Run();
 
