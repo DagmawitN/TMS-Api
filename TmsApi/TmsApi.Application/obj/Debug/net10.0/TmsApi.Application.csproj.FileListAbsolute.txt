@@ -1,0 +1,16 @@
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Application/bin/Debug/net10.0/TmsApi.Application.deps.json
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Application/bin/Debug/net10.0/TmsApi.Application.dll
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Application/bin/Debug/net10.0/TmsApi.Application.pdb
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Application/bin/Debug/net10.0/TmsApi.Domain.dll
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Application/bin/Debug/net10.0/TmsApi.Domain.pdb
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Application/obj/Debug/net10.0/TmsApi.Application.csproj.AssemblyReference.cache
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Application/obj/Debug/net10.0/TmsApi.Application.GeneratedMSBuildEditorConfig.editorconfig
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Application/obj/Debug/net10.0/TmsApi.Application.AssemblyInfoInputs.cache
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Application/obj/Debug/net10.0/TmsApi.Application.AssemblyInfo.cs
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Application/obj/Debug/net10.0/TmsApi.Application.csproj.CoreCompileInputs.cache
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Application/obj/Debug/net10.0/TmsApi.Application.sourcelink.json
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Application/obj/Debug/net10.0/TmsApi.A.8F6B91CF.Up2Date
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Application/obj/Debug/net10.0/TmsApi.Application.dll
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Application/obj/Debug/net10.0/refint/TmsApi.Application.dll
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Application/obj/Debug/net10.0/TmsApi.Application.pdb
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Application/obj/Debug/net10.0/ref/TmsApi.Application.dll
