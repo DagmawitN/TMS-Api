@@ -1,7 +1,15 @@
+using Asp.Versioning;
 using Scalar.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using TmsApi.Infrastructure.Persistence;
 using TmsApi.Api.Filters;
+using TmsApi.Middleware;
+using TmsApi.Application.Enrollments.Commands;
+using FluentValidation;
+using MediatR;
+using TmsApi.Api.ExceptionHandlers;
+using TmsApi.Application.Behaviors;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,13 +21,55 @@ builder.Services.AddAuthorization();
 builder.Services.AddProblemDetails();
 builder.Services.AddDbContext<TmsDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("TmsDatabase"))); // Show parameters in querylogs (dev only)
 builder.Services.AddControllers();
+builder.Services.AddCors(options =>
+{options.AddPolicy("AllowAngular", policy =>
+policy.WithOrigins("http://localhost:4200")
+.AllowAnyHeader()
+.AllowAnyMethod());
+});
 
+builder.Services.AddOpenApi("v1", options =>
+{
+options.ShouldInclude = description =>
+description.GroupName == "v1";
+});
+builder.Services.AddOpenApi("v2", options =>
+{
+options.ShouldInclude = description =>
+description.GroupName == "v2";
+});
+builder.Services.AddApiVersioning(options =>
+{
+options.DefaultApiVersion = new ApiVersion(1, 0);
+options.AssumeDefaultVersionWhenUnspecified = true;
+options.ReportApiVersions = true;
+options.ApiVersionReader = new UrlSegmentApiVersionReader();
+})
+
+
+.AddApiExplorer(options =>
+{
+options.GroupNameFormat = "'v'VVV";
+options.SubstituteApiVersionInUrl = true;
+});
+
+builder.Services.AddMediatR(cfg =>
+cfg.RegisterServicesFromAssembly(typeof(EnrollStudentHandler).Assembly));
+builder.Services.AddValidatorsFromAssembly(typeof(EnrollStudentValidator).Assembly);
 builder.Services.AddControllers(options =>
 {
 options.Filters.Add<AuditLogFilter>();
 });
+
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 builder.Services.AddScoped <ICourseService, CourseService>();
 builder.Services.AddScoped <IEnrollmentService, EnrollmentService>();
+builder.Services.AddScoped<TmsApi.Application.Interfaces.IEnrollmentService, EnrollmentService>();
+builder.Services.AddScoped<TmsApi.Application.Interfaces.ICourseService, CourseService>();
 
 
 var app = builder.Build();
@@ -27,17 +77,32 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
 app.UseStatusCodePages();
-app.MapControllers();
+
 app.UseHttpsRedirection();
+app.UseExceptionHandler();
 app.UseRouting();
+app.UseCors("AllowAngular");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<V1DeprecationMiddleware>();
+app.MapControllers();
+
 
 
 if(app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.MapScalarApiReference(options =>
+{
+options.WithTitle("TMS API Reference")
+.WithTheme(ScalarTheme.DeepSpace)
+.WithDefaultHttpClient(ScalarTarget.CSharp,
+ScalarClient.HttpClient);
+// Tell Scalar to pull both documents into its sidebar dropdown
+options
+.AddDocument("v1", "API Version 1.0")
+.AddDocument("v2", "API Version 2.0");
+});
 }
 
 

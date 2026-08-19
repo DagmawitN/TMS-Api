@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TmsApi.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3842ff30d13e854caea7bc41317f3ed40a2917a8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+08874e17293d7b9c79d7339bea1266baa734440f")]
 [assembly: System.Reflection.AssemblyProductAttribute("TmsApi.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TmsApi.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

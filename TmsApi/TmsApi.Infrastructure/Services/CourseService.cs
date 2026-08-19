@@ -3,11 +3,13 @@ using TmsApi.Domain.Entities;
 using TmsApi.Application.DTOs;
 using Microsoft.Extensions.Logging;
 using TmsApi.Infrastructure.Persistence;
+using TmsApi.Application.Interfaces;
 
+namespace TmsApi.Infrastructure.Persistence;
 
 public class CourseService(
     TmsDbContext context,
-    ILogger<CourseService> logger) : ICourseService
+    ILogger<CourseService> logger) : ICourseService, TmsApi.Application.Interfaces.ICourseService
 {
     public Task<CourseResponseDto?> GetByIdAsync(
         int id,
@@ -49,6 +51,14 @@ public class CourseService(
     }
     public Task<bool> CodeExistsAsync(string code, CancellationToken ct) =>
     context.Courses.AsNoTracking().AnyAsync(c => c.Code == code, ct);
+
+    public Task<Course?> GetByCodeAsync(string code, CancellationToken ct)
+    {
+        return context.Courses
+            .Include(c => c.Enrollments)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Code == code, ct);
+    }
 
     public async Task<PagedResponse<CourseResponseDto>> GetCoursesAsync(
 PagedRequest request, CancellationToken ct)
