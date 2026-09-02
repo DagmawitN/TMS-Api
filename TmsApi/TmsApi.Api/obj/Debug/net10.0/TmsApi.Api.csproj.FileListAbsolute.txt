@@ -140,3 +140,10 @@
 /Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Api/obj/Debug/net10.0/TmsApi.Api.pdb
 /Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Api/obj/Debug/net10.0/TmsApi.Api.genruntimeconfig.cache
 /Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Api/obj/Debug/net10.0/ref/TmsApi.Api.dll
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Api/bin/Debug/net10.0/BCrypt-Net-Next.dll
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Api/bin/Debug/net10.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Api/bin/Debug/net10.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Api/bin/Debug/net10.0/Microsoft.Bcl.Cryptography.dll
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Api/bin/Debug/net10.0/Microsoft.IdentityModel.Protocols.dll
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Api/bin/Debug/net10.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/Users/abi/Desktop/Qiyas/TmsApi/TmsApi.Api/bin/Debug/net10.0/System.IdentityModel.Tokens.Jwt.dll
